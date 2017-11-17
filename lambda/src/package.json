@@ -15,6 +15,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "alexa-sdk": "^1.0.0",
+    "lodash": "^4.17.4",
     "voice-insights-sdk": "^1.2.2"
   }
 }

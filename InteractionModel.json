@@ -2,355 +2,187 @@
   "languageModel": {
     "types": [
       {
-        "name": "US_STATE_ABBR",
+        "name": "LETTER",
         "values": [
           {
             "id": null,
             "name": {
-              "value": "AK",
+              "value": "A",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "AL",
+              "value": "B",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "AZ",
+              "value": "C",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "AR",
+              "value": "D",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "CA",
+              "value": "E",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "CO",
+              "value": "F",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "CT",
+              "value": "G",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "DE",
+              "value": "H",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "FL",
+              "value": "I",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "GA",
+              "value": "J",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "HI",
+              "value": "K",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "ID",
+              "value": "L",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "IL",
+              "value": "M",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "IN",
+              "value": "N",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "IA",
+              "value": "O",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "KS",
+              "value": "P",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "KY",
+              "value": "Q",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "LA",
+              "value": "R",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "ME",
+              "value": "S",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MD",
+              "value": "T",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MA",
+              "value": "U",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MI",
+              "value": "V",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MN",
+              "value": "W",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MS",
+              "value": "X",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MO",
+              "value": "Y",
               "synonyms": []
             }
           },
           {
             "id": null,
             "name": {
-              "value": "MT",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NE",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NV",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NH",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NJ",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NM",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NY",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "NC",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "ND",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "OH",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "OK",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "OR",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "PA",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "RI",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "SC",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "SD",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "TN",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "TX",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "UT",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "VT",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "VA",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "WA",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "WV",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "WI",
-              "synonyms": []
-            }
-          },
-          {
-            "id": null,
-            "name": {
-              "value": "WY",
+              "value": "Z",
               "synonyms": []
             }
           }
@@ -385,47 +217,15 @@
       {
         "name": "AnswerIntent",
         "samples": [
-          "{StateName}",
-          "{Capital}",
-          "{StatehoodYear}",
-          "{StatehoodOrder}",
-          "{Abbreviation}",
-          "tell me about {StateName}",
-          "tell me about {Capital}",
-          "tell me about {StatehoodYear}",
-          "tell me about {StatehoodOrder}",
-          "tell me about {Abbreviation}",
-          "what do you know about {StateName}",
-          "what do you know about {Capital}",
-          "what do you know about {StatehoodYear}",
-          "what do you know about {StatehoodOrder}",
-          "what do you know about {Abbreviation}",
-          "{StateName} information",
-          "{Capital} information",
-          "{StatehoodYear} information",
-          "{StatehoodOrder} information",
-          "{Abbreviation} information"
+          "{Letter}",
+          "The first letter is {Letter}",
+          "The letter is {Letter}",
+          "It is {Letter}"
         ],
         "slots": [
           {
-            "name": "StateName",
-            "type": "AMAZON.US_STATE"
-          },
-          {
-            "name": "Capital",
-            "type": "AMAZON.US_CITY"
-          },
-          {
-            "name": "StatehoodYear",
-            "type": "AMAZON.FOUR_DIGIT_NUMBER"
-          },
-          {
-            "name": "Abbreviation",
-            "type": "US_STATE_ABBR"
-          },
-          {
-            "name": "StatehoodOrder",
-            "type": "AMAZON.NUMBER"
+            "name": "Letter",
+            "type": "LETTER"
           }
         ]
       },
@@ -437,7 +237,21 @@
           "and start a quiz",
           "and quiz me",
           "for a quiz",
-          "a quiz"
+          "a quiz",
+          "start a game",
+          "play game",
+          "game"
+        ],
+        "slots": []
+      },
+      {
+        "name": "SongIntent",
+        "samples": [
+          "play the letter song",
+          "play the song",
+          "play song",
+          "letter song",
+          "song"
         ],
         "slots": []
       }

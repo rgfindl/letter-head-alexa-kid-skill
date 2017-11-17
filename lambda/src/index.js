@@ -7,7 +7,7 @@ const Alexa = require('alexa-sdk');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this:  const APP_ID = "amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1";
-const APP_ID = undefined;
+const APP_ID = 'amzn1.ask.skill.7065ccdb-53e8-42aa-b78a-d8a5d15a5486';
 
 //This function returns a descriptive sentence about your data.  Before a user starts a quiz, they can ask about a specific data element,
 //like "Ohio."  The skill will speak the sentence from this function, pulling the data values from the appropriate record in your data.

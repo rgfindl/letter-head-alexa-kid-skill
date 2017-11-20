@@ -254,6 +254,28 @@
           "song"
         ],
         "slots": []
+      },
+      {
+        "name": "MKSongIntent",
+        "samples": [
+          "play the letter song by Mary Kate",
+          "play the song by Mary Kate",
+          "play song by Mary Kate",
+          "letter song by Mary Kate",
+          "song by Mary Kate"
+        ],
+        "slots": []
+      },
+      {
+        "name": "JacobSongIntent",
+        "samples": [
+          "play the letter song by Jacob",
+          "play the song by Jacob",
+          "play song by Jacob",
+          "letter song by Jacob",
+          "song by Jacob"
+        ],
+        "slots": []
       }
     ],
     "invocationName": "letter head"

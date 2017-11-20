@@ -1,0 +1,1 @@
+aws s3 sync . "s3://word-up-alexa-kid-skill-publicassetsbucket-fgb1xhh6iib5" --exclude "*" --include "*.mp3" --acl public-read --delete --profile bluefin

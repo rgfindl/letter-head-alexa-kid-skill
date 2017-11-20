@@ -8,7 +8,7 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "ask-custom-StatesQuiz"
+                "uri": "ask-custom-LetterHead"
               }
             }
           }

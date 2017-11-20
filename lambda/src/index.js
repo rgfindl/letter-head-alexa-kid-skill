@@ -3,11 +3,7 @@ const Alexa = require('alexa-sdk');
 const _ = require('lodash');
 
 const words = require('./lib/words.json');
-
-
-//=========================================================================================================================================
-//TODO: The items below this comment need your attention
-//=========================================================================================================================================
+const audio_handlers = require('./lib/audio_handlers');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this:  const APP_ID = "amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1";
@@ -24,9 +20,9 @@ function getQuestion(word)
 //This is the function that returns an answer to your user during the quiz.  Much like the "getQuestion" function above, you can use a
 //switch() statement to create different responses for each property in your data.  For example, when this quiz has an answer that includes
 //a state abbreviation, we add some SSML to make sure that Alexa spells that abbreviation out (instead of trying to pronounce it.)
-function getAnswer(word, firstLetter)
+function getAnswer(word, firstLetter, letterSaid)
 {
-    return "The first letter in the word <emphasis>"+word+"</emphasis> is <break strength=\"medium\"/> <emphasis level=\"strong\">"+firstLetter+"</emphasis> <break strength=\"medium\"/>";
+    return "The letter I heard was "+letterSaid+"<break strength=\"medium\"/> The first letter in the word <emphasis>"+word+"</emphasis> is <break strength=\"medium\"/> <emphasis level=\"strong\">"+firstLetter+"</emphasis> <break strength=\"medium\"/>";
 }
 
 //This is a list of positive speechcons that this skill will use when a user gets a correct answer.  For a full list of supported
@@ -83,31 +79,37 @@ const handlers = {
     "Unhandled": function() {
         this.handler.state = states.START;
         this.emitWithState("Start");
-}
+    }
 };
 
 const startHandlers = Alexa.CreateStateHandler(states.START,{
     "Start": function() {
+        console.log('Start.Start');
         this.response.speak(WELCOME_MESSAGE).listen(HELP_MESSAGE);
         this.emit(":responseReady");
     },
     "QuizIntent": function() {
+        console.log('Start.QuizIntent');
         this.handler.state = states.QUIZ;
         this.emitWithState("Quiz");
     },
     "AMAZON.StopIntent": function() {
+        console.log('Start.AMAZON.StopIntent');
         this.response.speak(EXIT_SKILL_MESSAGE);
         this.emit(":responseReady");
     },
     "AMAZON.CancelIntent": function() {
+        console.log('Start.AMAZON.CancelIntent');
         this.response.speak(EXIT_SKILL_MESSAGE);
         this.emit(":responseReady");
     },
     "AMAZON.HelpIntent": function() {
+        console.log('Start.AMAZON.HelpIntent');
         this.response.speak(HELP_MESSAGE).listen(HELP_MESSAGE);
         this.emit(":responseReady");
     },
     "Unhandled": function() {
+        console.log('Start.Unhandled');
         this.emitWithState("Start");
     }
 });
@@ -115,12 +117,14 @@ const startHandlers = Alexa.CreateStateHandler(states.START,{
 
 const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
     "Quiz": function() {
+        console.log('Quiz.Quiz');
         this.attributes["response"] = "";
         this.attributes["counter"] = 0;
         this.attributes["quizscore"] = 0;
         this.emitWithState("AskQuestion");
     },
     "AskQuestion": function() {
+        console.log('Quiz.AskQuestion');
         if (this.attributes["counter"] == 0)
         {
             this.attributes["response"] = START_QUIZ_MESSAGE + " ";
@@ -138,6 +142,7 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
         this.emit(":ask", speech, question);
     },
     "AnswerIntent": function() {
+        console.log('Quiz.AnswerIntent');
         if (_.isEqual(this.event.request.type, 'SessionEndedRequest')) {
             this.response.speak(EXIT_SKILL_MESSAGE);
             this.emit(":responseReady");
@@ -147,7 +152,20 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
         let speechOutput = "";
         let word = this.attributes["quizword"];
         let firstLetter = _.head(_.split(word, ''));
-        const wordSaid = this.event.request.intent.slots.Letter.value;
+
+        if (_.isNil(this.event.request.intent) || _.isNil(this.event.request.intent.slots) || _.isNil(this.event.request.intent.slots.Letter)) {
+            this.response.speak(EXIT_SKILL_MESSAGE);
+            this.emit(":responseReady");
+            return;
+        }
+
+        let wordSaid = this.event.request.intent.slots.Letter.value;
+
+        if (_.isNil(wordSaid) || _.isEmpty(_.trim(wordSaid))) {
+            this.response.speak(EXIT_SKILL_MESSAGE);
+            this.emit(":responseReady");
+            return;
+        }
 
         const letterSaid = _.head(_.split(wordSaid, ''));
         const correct = !_.isNil(letterSaid) && _.size(wordSaid) <= 2 && _.isEqual(_.toLower(letterSaid), _.toLower(firstLetter));
@@ -165,7 +183,7 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
         else
         {
             response = getSpeechCon(false);
-            response += getAnswer(word, firstLetter);
+            response += getAnswer(word, firstLetter, letterSaid);
         }
 
         if (this.attributes["counter"] < 10)
@@ -183,26 +201,32 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
         }
     },
     "AMAZON.RepeatIntent": function() {
+        console.log('Quiz.AMAZON.RepeatIntent');
         let question = getQuestion(this.attributes["counter"], this.attributes["quizword"]);
         this.response.speak(question).listen(question);
         this.emit(":responseReady");
     },
     "AMAZON.StartOverIntent": function() {
+        console.log('Quiz.AMAZON.StartOverIntent');
         this.emitWithState("Quiz");
     },
     "AMAZON.StopIntent": function() {
+        console.log('Quiz.AMAZON.StopIntent');
         this.response.speak(EXIT_SKILL_MESSAGE);
         this.emit(":responseReady");
     },
     "AMAZON.CancelIntent": function() {
+        console.log('Quiz.AMAZON.CancelIntent');
         this.response.speak(EXIT_SKILL_MESSAGE);
         this.emit(":responseReady");
     },
     "AMAZON.HelpIntent": function() {
+        console.log('Quiz.AMAZON.HelpIntent');
         this.response.speak(HELP_MESSAGE).listen(HELP_MESSAGE);
         this.emit(":responseReady");
     },
     "Unhandled": function() {
+        console.log('Quiz.AnswerIntent');
         this.emitWithState("AnswerIntent");
     }
 });
@@ -222,6 +246,6 @@ exports.handler = (event, context) => {
     console.log(JSON.stringify(event, null, 3));
     const alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID;
-    alexa.registerHandlers(handlers, startHandlers, quizHandlers);
+    alexa.registerHandlers(handlers, startHandlers, quizHandlers, audio_handlers.audioEventHandlers, audio_handlers.stateHandlers);
     alexa.execute();
 };

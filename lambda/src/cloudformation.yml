@@ -81,6 +81,17 @@ Resources:
       Action: 'lambda:InvokeFunction'
       Principal: 'alexa-appkit.amazon.com'
 
+  #
+  # Audio Assets
+  #
+  PublicAssetsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: 'index.html'
+        ErrorDocument: '404.html'
+
 #
 # Outputs to be used by other CloudFormation templates if needed.
 #
@@ -90,3 +101,13 @@ Outputs:
     Value: !GetAtt LambdaFunction.Arn
     Export:
       Name: !Sub '${AWS::StackName}-LambdaFunction'
+  PublicAssetsBucket:
+    Description: Where the publicly available assets go.  Audio files, images, etc...
+    Value: !Ref PublicAssetsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicAssetsBucket'
+  PublicAssetsUrl:
+    Description: Where the publicly available assets go.  Audio files, images, etc...
+    Value: !GetAtt PublicAssetsBucket.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicAssetsUrl'

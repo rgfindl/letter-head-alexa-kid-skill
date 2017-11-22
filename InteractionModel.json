@@ -239,8 +239,11 @@
           "for a quiz",
           "a quiz",
           "start a game",
-          "play game",
-          "game"
+          "start a game game",
+          "and start a game",
+          "and game me",
+          "for a game",
+          "a game"
         ],
         "slots": []
       },
@@ -262,7 +265,11 @@
           "play the song by Mary Kate",
           "play song by Mary Kate",
           "letter song by Mary Kate",
-          "song by Mary Kate"
+          "song by Mary Kate",
+          "play Mary Kate's letter song",
+          "play Mary Kate's song",
+          "Mary Kate's letter song",
+          "Mary Kate's song"
         ],
         "slots": []
       },
@@ -273,7 +280,11 @@
           "play the song by Jacob",
           "play song by Jacob",
           "letter song by Jacob",
-          "song by Jacob"
+          "song by Jacob",
+          "play Jacob's letter song",
+          "play Jacob's song",
+          "Jacob's letter song",
+          "Jacob's song"
         ],
         "slots": []
       }

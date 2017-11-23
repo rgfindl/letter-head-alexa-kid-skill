@@ -44,6 +44,8 @@ const START_QUIZ_MESSAGE = "OK.  I will ask you 10 questions.";
 //This is the message a user will hear when they try to cancel or stop the skill, or when they finish a quiz.
 const EXIT_SKILL_MESSAGE = "Thank you for playing the Letter Head Quiz Game!  Let's play again soon!";
 
+const EXIT_SONG_MESSAGE = 'Thanks for listening to the letter song';
+
 //This is the message a user will hear when they ask Alexa for help in your skill.
 const HELP_MESSAGE = "You can ask me to play the letter song.  You can also test your knowledge by asking me to start a quiz.  What would you like to do?";
 
@@ -86,14 +88,13 @@ function getSpeechCon(type)
 
 var audio_controller = function () {
     return {
-        play: function (artist, offsetInMilliseconds) {
+        play: function (artist) {
             /*
              *  Using the function to begin playing audio when:
              *      Play Audio intent invoked.
              *      Resuming audio when stopped/paused.
              *      Next/Previous commands issued.
              */
-            var userId = getUserId(this.event);
 
             if (!_.isNil(artist)) {
                 var song = _.find(SONGS, {artist: artist});
@@ -101,11 +102,9 @@ var audio_controller = function () {
                 var song = SONGS[getRandom(0,1)];
             }
             const text = 'This is the letter song by '+song.artist;
+            const offsetInMilliseconds = 0;
 
-            if (_.isNil(offsetInMilliseconds))
-                offsetInMilliseconds = 0;
-
-            saveLastPlayed(userId, {
+            saveLastPlayed(getUserId(this.event), {
                 artist: song.artist,
                 offsetInMilliseconds: offsetInMilliseconds
             });
@@ -118,13 +117,24 @@ var audio_controller = function () {
              *  Issuing AudioPlayer.Stop directive to stop the audio.
              *  Attributes already stored when AudioPlayer.Stopped request received.
              */
-            var userId = getUserId(this.event);
-            deleteLastPlayed(userId);
-            if (_.isNil(text)) {
-              text = 'Thanks for listening to the letter song';
-            }
+            deleteLastPlayed(getUserId(this.event));
             this.response.speak(text).audioPlayerStop();
             this.emit(':responseReady');
+        },
+        pause: function() {
+            console.log('controller.pause');
+            this.response.audioPlayerStop();
+            this.emit(':responseReady');
+        },
+        resume: function() {
+            var lastPlayed = loadLastPlayed(getUserId(this.event));
+            if (_.isNil(lastPlayed)) {
+                audio_controller.play.call(this);
+            } else {
+                var song = _.find(SONGS, {artist: lastPlayed.artist});
+                this.response.audioPlayerPlay('REPLACE_ALL', song.url, song.url, null, lastPlayed.offsetInMilliseconds);
+                this.emit(':responseReady');
+            }
         }
     }
 }();
@@ -177,12 +187,10 @@ const startHandlers = Alexa.CreateStateHandler(states.START,{
     "AMAZON.StopIntent": function() {
         console.log('Start.AMAZON.StopIntent');
         audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-        this.emit(":responseReady");
     },
     "AMAZON.CancelIntent": function() {
         console.log('Start.AMAZON.CancelIntent');
         audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-        this.emit(":responseReady");
     },
     "AMAZON.HelpIntent": function() {
         console.log('Start.AMAZON.HelpIntent');
@@ -226,7 +234,6 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
         console.log('Quiz.AnswerIntent');
         if (_.isEqual(this.event.request.type, 'SessionEndedRequest')) {
             audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-            this.emit(":responseReady");
             return;
         }
         let response = "";
@@ -236,7 +243,6 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
 
         if (_.isNil(this.event.request.intent) || _.isNil(this.event.request.intent.slots) || _.isNil(this.event.request.intent.slots.Letter)) {
             audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-            this.emit(":responseReady");
             return;
         }
 
@@ -244,7 +250,6 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
 
         if (_.isNil(wordSaid) || _.isEmpty(_.trim(wordSaid))) {
             audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-            this.emit(":responseReady");
             return;
         }
 
@@ -294,12 +299,10 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
     "AMAZON.StopIntent": function() {
         console.log('Quiz.AMAZON.StopIntent');
         audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-        this.emit(":responseReady");
     },
     "AMAZON.CancelIntent": function() {
         console.log('Quiz.AMAZON.CancelIntent');
         audio_controller.stop.call(this, EXIT_SKILL_MESSAGE);
-        this.emit(":responseReady");
     },
     "AMAZON.HelpIntent": function() {
         console.log('Quiz.AMAZON.HelpIntent');
@@ -316,17 +319,26 @@ const quizHandlers = Alexa.CreateStateHandler(states.QUIZ,{
 var lastPlayedByUser = {};
 
 function saveLastPlayed(userId, lastPlayed) {
+    console.log('saveLastPlayed');
+    console.log(userId);
+    console.log(JSON.stringify(lastPlayed, null, 3));
     lastPlayedByUser[userId] = lastPlayed;
 };
 
 function deleteLastPlayed(userId) {
-    _.remove(lastPlayedByUser, function(value, index, array) {
-        return _.isEqual(index, userId);
-    });
+    console.log('deleteLastPlayed');
+    console.log(userId);
+    if (!_.isNil(userId)) {
+        _.remove(lastPlayedByUser, function (value, index, array) {
+            return _.isEqual(index, userId);
+        });
+    }
 };
 
 // Load information from our super simple, not-production-grade cache
 function loadLastPlayed(userId) {
+    console.log('loadLastPlayed');
+    console.log(userId);
     var lastPlayed = null;
     if (userId in lastPlayedByUser) {
         lastPlayed = lastPlayedByUser[userId];
@@ -341,63 +353,55 @@ function getUserId(event) {
 var audio_handlers = {
     stateHandlers: {
         'SongIntent': function () {
+            console.log('SongIntent');
             // play the radio
             audio_controller.play.call(this);
         },
         'MKSongIntent': function () {
+            console.log('MKSongIntent');
             // play the radio
             audio_controller.play.call(this, 'Mary Kate');
         },
         'JacobSongIntent': function () {
+            console.log('JacobSongIntent');
             // play the radio
             audio_controller.play.call(this, 'Jacob');
         },
+
         'AMAZON.NextIntent': function () {
+            console.log('AMAZON.NextIntent');
             this.emit(':responseReady');
         },
         'AMAZON.PreviousIntent': function () {
+            console.log('AMAZON.PreviousIntent');
             this.emit(':responseReady');
+        },
+        'AMAZON.CancelIntent':  function () {
+            console.log('AMAZON.CancelIntent');
+            audio_controller.stop.call(this, EXIT_SONG_MESSAGE)
+        },
+        'AMAZON.StopIntent':    function () {
+            console.log('AMAZON.StopIntent');
+            audio_controller.stop.call(this, EXIT_SONG_MESSAGE)
         },
 
         'AMAZON.PauseIntent':   function () {
-            var userId = getUserId(this.event);
-            var lastPlayed = loadLastPlayed(userId);
-            lastPlayed.offsetInMilliseconds = this.event.request.offsetInMilliseconds;
-            saveLastPlayed(userId, lastPlayed);
-            audio_controller.stop.call(this)
+            console.log('AMAZON.PauseIntent');
+            audio_controller.pause.call(this)
         },
-        'AMAZON.CancelIntent':  function () { this.emit('AMAZON.StopIntent'); },
-        'AMAZON.StopIntent':    function () { audio_controller.stop.call(this) },
-
         'AMAZON.ResumeIntent':  function () {
-            var userId = getUserId(this.event);
-
-            var lastPlayed = loadLastPlayed(userId);
-            var offsetInMilliseconds = 0;
-            var artist = null;
-            if (!_.isNil(lastPlayed)) {
-                offsetInMilliseconds = lastPlayed.offsetInMilliseconds;
-                artist = lastPlayed.artist;
-            }
-            audio_controller.play.call(this, artist, offsetInMilliseconds);
+            console.log('AMAZON.ResumeIntent');
+            audio_controller.resume.call(this);
         },
 
         'AMAZON.LoopOnIntent':     function () { this.emit('AMAZON.StartOverIntent');},
         'AMAZON.LoopOffIntent':    function () { this.emit('AMAZON.StartOverIntent');},
         'AMAZON.ShuffleOnIntent':  function () { this.emit('AMAZON.StartOverIntent');},
         'AMAZON.ShuffleOffIntent': function () { this.emit('AMAZON.StartOverIntent');},
-        'AMAZON.StartOverIntent':  function () {
-            this.emit(':responseReady');
-        },
-
-        /*
-         *  All Requests are received using a Remote Control. Calling corresponding handlers for each of them.
-         */
-        'PlayCommandIssued':  function () { audio_controller.play.call(this) },
-        'PauseCommandIssued': function () { audio_controller.stop.call(this) }
+        'AMAZON.StartOverIntent':  function () { this.emit(':responseReady');}
     },
     audioEventHandlers: {
-        'AudioPlayer.PlaybackStarted' : function () {
+        'PlaybackStarted' : function () {
             /*
              * AudioPlayer.PlaybackStarted Directive received.
              * Confirming that requested audio file began playing.
@@ -406,26 +410,34 @@ var audio_handlers = {
             console.log("Playback started");
             this.emit(':responseReady');
         },
-        'AudioPlayer.PlaybackFinished' : function () {
+        'PlaybackFinished' : function () {
             /*
              * AudioPlayer.PlaybackFinished Directive received.
              * Confirming that audio file completed playing.
              * Do not send any specific response.
              */
             console.log("Playback finished");
+            deleteLastPlayed(getUserId(this.event));
             this.emit(':responseReady');
         },
-        'AudioPlayer.PlaybackStopped' : function () {
+        'PlaybackStopped' : function () {
             /*
              * AudioPlayer.PlaybackStopped Directive received.
              * Confirming that audio file stopped playing.
              */
             console.log("Playback stopped");
 
+            var userId = getUserId(this.event);
+            var lastPlayed = loadLastPlayed(userId);
+            if (!_.isNil(lastPlayed)) {
+                lastPlayed.offsetInMilliseconds = this.event.context.AudioPlayer.offsetInMilliseconds;
+                saveLastPlayed(userId, lastPlayed);
+            }
+
             //do not return a response, as per https://developer.amazon.com/docs/custom-skills/audioplayer-interface-reference.html#playbackstopped
             this.emit(':responseReady');
         },
-        'AudioPlayer.PlaybackNearlyFinished' : function () {
+        'PlaybackNearlyFinished' : function () {
             /*
              * AudioPlayer.PlaybackNearlyFinished Directive received.
              * Replacing queue with the URL again.
@@ -435,7 +447,7 @@ var audio_handlers = {
             //this.response.audioPlayerPlay('REPLACE_ALL', audioData.url, audioData.url, null, 0);
             this.emit(':responseReady');
         },
-        'AudioPlayer.PlaybackFailed' : function () {
+        'PlaybackFailed' : function () {
             /*
              * AudioPlayer.PlaybackFailed Directive received.
              * Logging the error and restarting playing.

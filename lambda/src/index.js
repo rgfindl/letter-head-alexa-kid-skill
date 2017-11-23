@@ -328,10 +328,8 @@ function saveLastPlayed(userId, lastPlayed) {
 function deleteLastPlayed(userId) {
     console.log('deleteLastPlayed');
     console.log(userId);
-    if (!_.isNil(userId)) {
-        _.remove(lastPlayedByUser, function (value, index, array) {
-            return _.isEqual(index, userId);
-        });
+    if (!_.isNil(userId) && !_.isNil(lastPlayedByUser[userId])) {
+        delete lastPlayedByUser[userId];
     }
 };
 
